@@ -13,6 +13,7 @@ from recipe.utils.llm_service import llm_service
 def api_recipe_homepage(request, format=None):
     return Response({
         'recipes': reverse('api_recipes:recipe-list', request=request, format=format),
+        "recipe-create": reverse('api_recipes:recipe-create', request=request, format=format),
         "suggest_food": reverse("api_recipes:suggest_food", request=request, format=format),
         "analyse_sentence": reverse("api_recipes:analyse_sentence", request=request, format=format)
 

@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -18,15 +19,17 @@ def planning_homepage_view(request, format=None):
         'user_recipes': reverse('api_planning:user_recipes', request=request, format=format),
     })
 
+
 class DayCaloriesListApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = DayCaloriesSerializer
-    filterset_fields = ['date', ]
+    filter_backends = [DjangoFilterBackend]
     filterset_class = DateRangeFilter
 
     def get_queryset(self):
         profile = self.request.user.profile
         return DayCalories.objects.filter(profile=profile)
+
 
 class DayCaloriesDetailApiView(RetrieveUpdateDestroyAPIView):
     serializer_class = DayCaloriesSerializer
@@ -45,6 +48,7 @@ class DayCaloriesDetailApiView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         profile = self.request.user.profile
         return DayCalories.objects.filter(profile=profile)
+
 
 class DayCategoryListApiView(ListCreateAPIView):
     permission_classes = [IsAuthenticated, ]
