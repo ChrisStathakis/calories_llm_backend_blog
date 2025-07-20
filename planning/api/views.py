@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from django_filters.rest_framework import DjangoFilterBackend
+from django.utils import timezone
 from django_filters import rest_framework
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -38,10 +39,11 @@ class DayCaloriesDetailApiView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         # you need to pass the date on this format  'YYYY-MM-DD'
+        date_selected = datetime.strptime(self.kwargs.get(self.lookup_field),'%Y-%m-%d')
+        date_aware = timezone.make_aware(date_selected, timezone.get_current_timezone()).date()
         profile = self.request.user.profile
         obj, _ = DayCalories.objects.get_or_create(profile=profile,
-                                                   date=datetime.strptime(self.kwargs.get(self.lookup_field),
-                                                                          '%Y-%m-%d')
+                                                   date=date_aware
                                                    )
         return obj
 
